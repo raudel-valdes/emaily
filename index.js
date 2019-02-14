@@ -20,10 +20,10 @@ passport.use(
     })
 );
 
- asking google to allow the user to sign in and provide access 
- to the profile and email. scope specifies what user info we are
- trying to access. passport knows that the string 'google' is 
- refering to the the google strategy
+//  asking google to allow the user to sign in and provide access 
+//  to the profile and email. scope specifies what user info we are
+//  trying to access. passport knows that the string 'google' is 
+//  refering to the the google strategy
 app.get(
     '/auth/google',                   
     passport.authenticate('google', { 
