@@ -15,7 +15,11 @@ mongoose.connect(keys.mongoURI);
 
 const app = express();
 
-//enabling cookies inside of our application
+//enabling cookies inside of our application. This allows for an user
+//to essentially have a "session" within our application and we can
+//keep track of who that user is and when we no longer want him
+//in our application. Keys.cookieKey is a random string of characters
+//that will be used to encode the session token/cookie
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000,

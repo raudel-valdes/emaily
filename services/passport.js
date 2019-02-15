@@ -8,10 +8,13 @@ const keys = require('../config/keys.js');
 //we are trying to pass in a new model name and data
 const User = mongoose.model('users');
 
+
+//encodoes the user ID inside of the cookie
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
+//decodes the user ID inside of the cookie
 passport.deserializeUser((id, done) => {
     User.findById(id).then(user => {
         done(null, user);
