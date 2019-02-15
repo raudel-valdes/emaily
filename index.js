@@ -1,43 +1,37 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const keys = require('./config/keys.js');
+const keys = require('./config/keys');
+
+//the order of these two requires are important because first
+//you need to create and import your models and then you can 
+//run passport to save to the database
+require('./models/users'); 
+require('./services/passport.js');
+
+//connects to mongodb throguh mongoose and passes in our access key
+mongoose.connect(keys.mongoURI);
+
 const app = express();
 
-//making that bridge that will help us connect to googles auth
-//the callbackURL is the next endpoint that google will call
-//after being authenticated. After the callbackURL executes 
-//it will call a fucniton and console.log the access token
-passport.use(
-    new GoogleStrategy({
-        clientID: keys.googleClientID,
-        clientSecret: keys.googleClientSecret,
-        callbackURL: '/auth/google/callback' 
-    }, (accessToken, refreshToken, profile, done) => {                    
-        console.log('accessToken: ',accessToken);
-        console.log('refresh token: ', refreshToken);
-        console.log('profile: ', profile);
+//enabling cookies inside of our application
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: [keys.cookieKey]
     })
 );
 
-//  asking google to allow the user to sign in and provide access 
-//  to the profile and email. scope specifies what user info we are
-//  trying to access. passport knows that the string 'google' is 
-//  refering to the the google strategy
-app.get(
-    '/auth/google',                   
-    passport.authenticate('google', { 
-        scope: ['profile', 'email'] 
-    })
-);
+//this will make sure that passport knows to track the user
+//with the key that we are grabbing from the mongodb id field
+app.use(passport.initialize());
+app.use(passport.session());
 
-//this time around we are going to be recieving the user information
-//we will be sending in the token that the user was provided with when 
-//they accepted to give us premission to their account. Google will
-// verify the token and return the required information
-app.get('/auth/google/callback', passport.authenticate('google')); 
+//here we import the functions from authRoutes.js and then call
+//it by attatching () next to it and passing it in the variable app
+require('./routes/authRoutes.js')(app);
 
 //either do it in the port provided by huroku or on port 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
-
