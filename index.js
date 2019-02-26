@@ -12,7 +12,7 @@ require('./services/passport.js');
 
 //connects to mongodb throguh mongoose and passes in our access key
 mongoose.connect(keys.mongoURI);
-mongoose.connection.onError((error) => console.log('ERROR:', error));
+mongoose.connection.on( 'error', (error) => console.log('ERROR:', error));
 
 const app = express();
 
