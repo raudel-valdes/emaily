@@ -24,12 +24,17 @@ passport.deserializeUser((id, done) => {
 //making that bridge that will help us connect to googles auth
 //the callbackURL is the next endpoint that google will call
 //after being authenticated. After the callbackURL executes 
-//it will call a fucniton and console.log the access token
+//it will call a fucniton and console.log the access token.
+//Heroku uses proxies to redirect traffic from our browser to
+//the correct heroku servers and uses a proxy to do this.
+//By specifiying 'proxy: true' we allow google to trust 
+//the request even though it is no longer https
 passport.use(
     new GoogleStrategy({
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
-        callbackURL: '/auth/google/callback' 
+        callbackURL: '/auth/google/callback',
+        proxy: true 
     }, (accessToken, refreshToken, profile, done) => {
         User.findOne({ googleID: profile.id }).then((existingUser) => {
             if (existingUser) {
