@@ -28,7 +28,7 @@ passport.deserializeUser((id, done) => {
 //Heroku uses proxies to redirect traffic from our browser to
 //the correct heroku servers and uses a proxy to do this.
 //By specifiying 'proxy: true' we allow google to trust 
-//the request even though it is no longer https
+//the request even though it is no longer https....
 passport.use(
     new GoogleStrategy({
         clientID: keys.googleClientID,
