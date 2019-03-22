@@ -4,7 +4,7 @@ import { FETCH_USER } from './types';
 export const fetchUser = () => async dispatch => {
     const res = await axios.get('/api/current_user');
 
-    dispatch({ type: FETCH_USER, payload: res });
+    dispatch({ type: FETCH_USER, payload: res.data });
   };
 
 //By using redux-thunk we are able to call an action creator without having to
