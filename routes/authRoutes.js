@@ -17,7 +17,15 @@ module.exports = app => {
     //we will be sending in the token that the user was provided with when 
     //they accepted to give us premission to their account. Google will
     // verify the token and return the required information
-    app.get('/auth/google/callback', passport.authenticate('google'));
+    app.get(   
+        '/auth/google/callback', 
+        passport.authenticate('google'),
+        (req, res) => {
+            console.log('res', res);
+            console.log('req', req);
+            res.redirect('http://localhost:3000/surveys');
+        } 
+    );
 
     //when we call logout is a function that is attatched automaticallly to
     //req by passort. It takes the cookie that contains the user ID
@@ -25,7 +33,7 @@ module.exports = app => {
     //and logs them out.
     app.get('/api/logout', (req, res) => {
         req.logout();
-        res.send(req.user);
+        res.redirect('/');
     });
 
     //returns to the website the user information right after signing in.
