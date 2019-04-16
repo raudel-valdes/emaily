@@ -12,6 +12,8 @@ require('./services/passport.js');
 
 //connects to mongodb throguh mongoose and passes in our access key
 mongoose.connect(keys.mongoURI);
+
+//logs out any errors that happen with the connection to the mongo cluster/database
 mongoose.connection.on( 'error', (error) => console.log('ERROR:', error));
 
 const app = express();
