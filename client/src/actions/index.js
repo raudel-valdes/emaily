@@ -7,6 +7,12 @@ export const fetchUser = () => async dispatch => {
     dispatch({ type: FETCH_USER, payload: res.data });
   };
 
+  export const handleToken = (token) => async dispatch => {
+    const res = await axios.post('/api/stripe', token);
+
+    dispatch({ type: FETCH_USER, payload: res.data });
+  }; 
+
 //By using redux-thunk we are able to call an action creator without having to
 //immidiately return an action and it gives us direct access to the dispatch function. 
 //To make all of this possible what we do is that we return a function with the ajax 

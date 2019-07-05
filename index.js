@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 //the order of these two requires are important because first
@@ -16,7 +17,13 @@ mongoose.connect(keys.mongoURI);
 //logs out any errors that happen with the connection to the mongo cluster/database
 mongoose.connection.on( 'error', (error) => console.log('ERROR:', error));
 
+//creating our express application
 const app = express();
+
+//MiddleWear attatched to Express in order to parse through 
+//the body of each request so that we can access this information
+//since Express does not offer this functionality
+app.use(bodyParser.json());
 
 //enabling cookies inside of our application. This allows for an user
 //to essentially have a "session" within our application and we can
@@ -38,6 +45,7 @@ app.use(passport.session());
 //here we import the functions from authRoutes.js and then call
 //it by attatching () next to it and passing it in the variable app
 require('./routes/authRoutes.js')(app);
+require('./routes/billingRoutes.js')(app);
 
 //either do it in the port provided by huroku or on port 5000
 const PORT = process.env.PORT || 5000;

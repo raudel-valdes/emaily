@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose
 
 const userSchema = new Schema({
-    googleID: String
+    googleID: String,
+    credits: { type: Number, default: 0 }
 });
 
 //tells mongo that we want to create a new
