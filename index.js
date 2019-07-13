@@ -47,6 +47,23 @@ app.use(passport.session());
 require('./routes/authRoutes.js')(app);
 require('./routes/billingRoutes.js')(app);
 
+//This will only run if we are in HEROKU's production
+//NODE_ENV is a HEROKU's enviroment variable
+if (process.env.NODE_ENV === 'production') {
+    //Express will serve up production assets
+    //like our main.js file, or main.css file!
+
+    app.use(express.static('client/build'));
+
+    //Express will serve up the index.html file
+    //if it doesn't recognize the route
+
+    const path = require('path');
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(_dirname, 'client', 'build', 'index.html'));
+    });
+}
+
 //either do it in the port provided by huroku or on port 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

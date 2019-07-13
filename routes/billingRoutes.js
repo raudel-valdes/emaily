@@ -1,18 +1,10 @@
 const keys = require('../config/keys');
 const stripe = require('stripe')(keys.stripeSecretKey);
+const requireLogin = require('../middlewares/requireLogin');
 
 module.exports = app => {
-  app.post('/api/stripe', async (req, res) => {
-    //This takes care of the scenerio in which someone
-    //calls our API route and is not logged in. This will
-    //stop the request and give the client side an error.
-    //This is not the best way to do it because it can 
-    //become very reptitive from route to route. 
-    //This will be refactored in the future.
-    if (!req.user) {
-      return res.status(401).send({ error: 'You must log in!' });
-    }
-
+  app.post('/api/stripe', requireLogin, async (req, res) => {
+    
     //this is the way that the backend can
     //tell scripe to make a transaction
     //by grabbing and passing the values
